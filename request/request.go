@@ -46,3 +46,22 @@ func Post(address string, m interface{}) ([]byte, error) {
 	req.Body(data)
 	return req.Bytes()
 }
+
+func Put(address string, m interface{}) ([]byte, error) {
+	var data []byte
+	if v, ok := m.([]byte); ok {
+		data = v
+	} else {
+		b, err := json.Marshal(m)
+		if err != nil {
+			return nil, err
+		}
+		data = b
+	}
+	req := httplib.Put(address)
+	req.Header("X-Bmob-Application-Id", BmobAppKey)
+	req.Header("X-Bmob-REST-API-Key", BmobRestKey)
+	req.Header("Content-Type", "application/json")
+	req.Body(data)
+	return req.Bytes()
+}

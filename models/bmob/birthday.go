@@ -8,6 +8,7 @@ import (
 )
 
 type Birthday struct {
+	ObjectId      string  `json:"objectId"`
 	Sex           bool    `json:"sex"`
 	Name          string  `json:"name"`
 	Own           int64   `json:"own"`
@@ -42,8 +43,8 @@ func BirthdayList() ([]*Birthday, error) {
 		return nil, err
 	}
 	var r []*Birthday
-	count = count / 100
-	for i := 0; i < count; i++ {
+	for i := 0; i < count; i += 100 {
+
 		v, err := BirthdayOnPage("100", strconv.Itoa(i))
 		if err != nil {
 			fmt.Println("birthday on page error: ", err)
@@ -72,7 +73,7 @@ func BirthdayOnPage(limit, skip string) ([]*Birthday, error) {
 
 func (this *Birthday) UpdateSendSmsDate(date string) error {
 	m := map[string]string{"sendSmsDate": date}
-	r, err := request.Post(getAddress("birthday_list"), m)
+	r, err := request.Put(getAddress("birthday_list")+"/"+this.ObjectId, m)
 	if err != nil {
 		return err
 	}

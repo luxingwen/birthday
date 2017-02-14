@@ -19,8 +19,7 @@ func UserList() ([]*User, error) {
 		return nil, err
 	}
 	var r []*User
-	count = count / 100
-	for i := 0; i < count; i++ {
+	for i := 0; i < count; i += 100 {
 		v, err := UsersOnPage("100", strconv.Itoa(i))
 		if err != nil {
 			fmt.Println("birthday on page error: ", err)
