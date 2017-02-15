@@ -38,8 +38,8 @@ func Notify() {
 					continue
 				}
 				//phone := strconv.FormatFloat(own.Phone, 'f', -1, 64)
-				if item.SendSmsDate != time.Now().Format("20060102") { //判断是否发过短信
-					r, err := sendSms(own.Phone, fmt.Sprintf("亲爱的%s，今天是%s的生日，记得买礼物或者发送祝福喔。", own.UserName, item.Name))
+				if item.SendSmsDate != time.Now().Add(48*time.Hour).Format("20060102") { //判断是否发过短信
+					r, err := sendSms(own.Phone, fmt.Sprintf("亲爱的%s，后天是%s的生日，记得买礼物或者发送祝福喔，本短信来自小程序生日工具。", own.UserName, item.Name))
 					if err != nil {
 						fmt.Println("send sms err:", err)
 						continue
@@ -67,6 +67,7 @@ func Notify() {
 func sendSms(phone string, content string) (r []byte, err error) {
 	data := map[string]string{
 		"mobilePhoneNumber": phone,
+		"template":          "srtx",
 		"content":           content,
 	}
 	r, err = request.Post("https://api.bmob.cn/1/requestSms", data)
