@@ -65,3 +65,27 @@ func Put(address string, m interface{}) ([]byte, error) {
 	req.Body(data)
 	return req.Bytes()
 }
+
+func WGet(address string, m map[string]string) ([]byte, error) {
+	req := httplib.Get(address)
+	for k, v := range m {
+		req.Param(k, v)
+	}
+	return req.Bytes()
+}
+
+func WPost(address string, m interface{}) ([]byte, error) {
+	var data []byte
+	if v, ok := m.([]byte); ok {
+		data = v
+	} else {
+		b, err := json.Marshal(m)
+		if err != nil {
+			return nil, err
+		}
+		data = b
+	}
+	req := httplib.Post(address)
+	req.Body(data)
+	return req.Bytes()
+}

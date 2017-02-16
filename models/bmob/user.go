@@ -7,10 +7,16 @@ import (
 	"strconv"
 )
 
+//{"expires_in":7200,"openid":"ocBzs0DbpkQNpg6SsrCf7rhze8GY","session_key":"w0cRl0e1y49i9o0YQsxM8w=="}
 type User struct {
 	UserName string  `json:"username"`
 	Phone    string  `json:"mobilePhoneNumber"`
 	Uid      float64 `json:"uid"`
+	UserData struct {
+		ExpiresIn  float64 `json:"expires_in"`
+		Openid     string  `json:"openid"`
+		SessionKey string  `json:"session_key"`
+	} `json:"userData"`
 }
 
 func UserList() ([]*User, error) {
@@ -22,7 +28,7 @@ func UserList() ([]*User, error) {
 	for i := 0; i < count; i += 100 {
 		v, err := UsersOnPage("100", strconv.Itoa(i))
 		if err != nil {
-			fmt.Println("birthday on page error: ", err)
+			fmt.Println("usersOnpage on page error: ", err)
 			continue
 		}
 		r = append(r, v...)
