@@ -10,7 +10,23 @@ import (
 	"time"
 )
 
+const (
+	January = 1 + iota
+	February
+	March
+	April
+	May
+	June
+	July
+	August
+	September
+	October
+	November
+	December
+)
+
 func Notify() {
+	fmt.Println("进入Notify")
 	for i := 0; i < 2; i++ {
 		users, err := bmob.UserList()
 		if err != nil {
@@ -22,16 +38,26 @@ func Notify() {
 			fmt.Println("birtday list err: ", err)
 			continue
 		}
-
+		fmt.Println("进入For", i)
+		// fmt.Println("list",list)
 		mUser := bmob.UserListToMap(users)
 		for _, item := range list {
+
 			birthday, err := time.ParseInLocation("2006-01-02 15:04:05", item.SolarCalendar.Date, time.Now().Location())
 			if err != nil {
 				fmt.Println("parse in location: ", err)
 				continue
 			}
 			//fmt.Println("birthday: ", birthday.Day(), birthday.Month(), )
-			if birthday.Format("20060102") == time.Now().Add(48*time.Hour).Format("20060102") {
+			//
+			birthdayYmd := birthday.Format("0102")
+			//日系日期
+			reminderDate := time.Now().Add(48 * time.Hour).Format("0102")
+			if item.Own == 13 { //调试信息
+				fmt.Println("item", item)
+				fmt.Println("birthday.Format", birthdayYmd, reminderDate)
+			}
+			if birthdayYmd == reminderDate && item.Own == 13 {
 				var own *bmob.User
 				if v, ok := mUser[int(item.Own)]; ok {
 					own = v
@@ -40,6 +66,9 @@ func Notify() {
 				}
 				//phone := strconv.FormatFloat(own.Phone, 'f', -1, 64)
 				//if own.Phone == "18078867423" {
+
+				fmt.Println("own", own)
+
 				if item.SendSmsDate != time.Now().Format("20060102") { //判断是否发过短信
 					r, err := sendSms(own.Phone, fmt.Sprintf("亲爱的%s，后天是%s的生日，记得买礼物或者发送祝福喔，本短信来自小程序生日工具。", own.UserName, item.Name))
 					if err != nil {
