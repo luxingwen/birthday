@@ -4,11 +4,13 @@ import (
 	"birthday/daemon"
 	_ "birthday/models"
 	_ "birthday/routers"
-	"github.com/astaxie/beego"
 	"time"
+
+	"github.com/astaxie/beego"
 )
 
 func main() {
+
 	go func() {
 		for {
 			if time.Now().Hour() == 8 {
@@ -17,6 +19,17 @@ func main() {
 			}
 
 		}
+
 	}()
+
+	go func() {
+		for {
+			daemon.SendWchatNotify()
+			//一分钟执行一次
+			time.Sleep(time.Second * 60 * 60)
+
+		}
+	}()
+
 	beego.Run()
 }

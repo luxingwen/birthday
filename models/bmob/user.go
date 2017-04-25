@@ -11,16 +11,17 @@ import (
 type User struct {
 	UserName string  `json:"username"`
 	Phone    string  `json:"mobilePhoneNumber"`
+	Openid   string  `json:"openid"`
 	Uid      float64 `json:"uid"`
-	UserData struct {
-		ExpiresIn  float64 `json:"expires_in"`
-		Openid     string  `json:"openid"`
-		SessionKey string  `json:"session_key"`
-	} `json:"userData"`
+	AuthData struct {
+		ExpiresIn  string `json:"expires_in"`
+		Openid     string `json:"openid"`
+		SessionKey string `json:"session_key"`
+	} `json:"authData"`
 }
 
 func UserList() ([]*User, error) {
-	count, err := count(getAddress("user"))
+	count, err := count(getAddress("user"), nil)
 	if err != nil {
 		return nil, err
 	}
