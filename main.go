@@ -2,8 +2,8 @@ package main
 
 import (
 	"birthday/daemon"
-	_ "birthday/models"
 	_ "birthday/routers"
+
 	"time"
 
 	"github.com/astaxie/beego"
@@ -17,7 +17,6 @@ func main() {
 				daemon.Notify()
 				time.Sleep(time.Second * 60 * 40)
 			}
-
 		}
 
 	}()
@@ -27,9 +26,10 @@ func main() {
 			daemon.SendWchatNotify()
 			//一分钟执行一次
 			time.Sleep(time.Second * 60 * 60)
-
 		}
 	}()
+
+	//bmob.ShopList()
 
 	beego.Run()
 }
